@@ -1,5 +1,7 @@
 # grunt-get-branchname
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/dastangoo/grunt-get-branchname.svg)](https://greenkeeper.io/)
+
 > Get current branch name and pass it to another task\'s config
 
 ## Getting Started

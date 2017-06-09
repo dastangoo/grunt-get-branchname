@@ -17,18 +17,35 @@ module.exports = function(grunt) {
     // Merge task-specific and/or target-specific options with these defaults.
     var done = this.async(),
         options = this.options({
-          punctuation: '.',
-          separator: ', '
+          target: null,
+          short: true,
+          quiet: false
+
         });
+    if (!options.target) {
+      grunt.log.error('target option is null, please specify a target');
+      done(false);
+    }
+
+    var args = [
+      'symbolic-ref', 'HEAD'
+    ];
+
+    if (options.short) {
+      args.push('--short');
+    }
+    if (options.quiet) {
+      args.push('-q');
+    }
     grunt.util.spawn({
       cmd: 'git',
-      args: ['symbolic-ref', 'HEAD', '--short']
+      args: args
     }, function (error, result) {
       if (error) {
         grunt.log.error([error]);
         done(false);
       }
-      grunt.config.set('gitrebase.dist.options.branch', result.stdout);
+      grunt.config.set(options.target, result.stdout);
       done();
     });
   });

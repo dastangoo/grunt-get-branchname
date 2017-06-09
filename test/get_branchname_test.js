@@ -22,27 +22,23 @@ var grunt = require('grunt');
     test.ifError(value)
 */
 
+var currentBranch;
+
 exports.get_branchname = {
   setUp: function(done) {
-    // setup here if necessary
-    done();
+    grunt.util.spawn({
+      cmd: 'git',
+      args: ['symbolic-ref', 'HEAD', '--short']
+    }, function (error, result) {
+      currentBranch = result.stdout;
+      done();
+    });
   },
   default_options: function(test) {
     test.expect(1);
 
-    var actual = grunt.file.read('tmp/default_options');
-    var expected = grunt.file.read('test/expected/default_options');
-    test.equal(actual, expected, 'should describe what the default behavior is.');
+    test.equal(grunt.config.get('get_branchname.testconfig.branchname'), currentBranch, 'it injects the correct branch name into the specified config');
 
     test.done();
-  },
-  custom_options: function(test) {
-    test.expect(1);
-
-    var actual = grunt.file.read('tmp/custom_options');
-    var expected = grunt.file.read('test/expected/custom_options');
-    test.equal(actual, expected, 'should describe what the custom option(s) behavior is.');
-
-    test.done();
-  },
+  }
 };
